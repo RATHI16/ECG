@@ -1,0 +1,82 @@
+# ECGSynth_v2 Configuration
+# Synthetic ECG Dataset Generation for SAME54 XPRO Classifier
+
+sampling_rate: 1000          # Hz (matches SAME54 ADC rate)
+duration: 10                 # seconds per generated ECG
+output_samples: 10000        # sampling_rate * duration
+
+# Input data paths (relative to ECGSynth_v2/)
+input_dir: "../"             # parent directory containing raw CSVs
+input_files:
+  - "PERSONB_QRS30.csv"
+  - "PERSONC_QRS30.csv"
+  - "Response Sample 1_SIM_QRS21_A.csv"
+  - "Sample 1_UB_QRS21.csv"
+  - "Sample 1_UD_QRS21.csv"
+  - "Sample 1_UE_QRS21.csv"
+  - "Sample 1_UF_QRS21.csv"
+  - "Sample 2_UA_QRS21.csv"
+  - "Sample 3_UA_QRS21.csv"
+
+# Output counts
+count_normal: 30
+count_afib: 30
+count_noise: 30
+
+# Preprocessing
+filter:
+  lowcut: 0.5                # Hz - high-pass to remove baseline drift
+  highcut: 45.0              # Hz - low-pass to remove muscle noise
+  order: 3                   # Butterworth filter order
+
+# Normal ECG generation parameters
+normal:
+  hr_range: [60, 100]        # BPM range for normal sinus rhythm
+  rr_variability_ms: 30      # Gaussian jitter on RR intervals (ms)
+  amplitude_scale_range: [0.8, 1.2]  # random amplitude scaling per beat
+  noise_baseline_amp: 0.02   # baseline wander amplitude (fraction of signal range)
+  noise_baseline_freq: 0.3   # Hz
+  noise_muscle_amp: 0.01     # muscle noise amplitude (fraction)
+
+# AFib ECG generation parameters
+afib:
+  hr_range: [90, 170]        # ventricular rate BPM (typically fast)
+  rr_irregularity_cv: 0.25   # coefficient of variation for RR intervals
+  p_wave_removal: true       # remove P-wave from templates
+  f_wave_amplitude: 0.03     # fibrillatory wave amplitude (fraction)
+  f_wave_freq_range: [4, 8]  # Hz range for f-waves
+  qrs_max_ms: 120            # narrow QRS required
+
+# Noise ECG generation parameters
+noise:
+  baseline_amplitude: 0.3    # large baseline wander (fraction of signal range)
+  baseline_freq_range: [0.1, 0.5]  # Hz
+  muscle_amplitude: 0.25     # broadband muscle noise (fraction)
+  muscle_band: [20, 100]     # Hz range for muscle noise
+  powerline_freq: 50         # Hz (or 60 for US)
+  powerline_amplitude: 0.15  # powerline interference (fraction)
+  adc_noise: 0.05            # random ADC/thermal noise
+  motion_artifacts: 5        # number of random motion spikes
+
+# Validation thresholds
+validation:
+  normal:
+    hr_range: [50, 110]       # acceptable BPM range
+    rr_cv_max: 0.15           # max CV of RR intervals (regular rhythm)
+    snr_min_db: 5             # minimum SNR in dB (kurtosis-based metric)
+  afib:
+    hr_range: [60, 180]       # acceptable ventricular rate
+    rr_cv_min: 0.15           # minimum CV (must be irregular)
+    qrs_max_ms: 120           # narrow QRS required
+    snr_min_db: 5             # still readable signal
+  noise:
+    snr_max_db: 3             # must be very noisy
+    max_detected_peaks: 3     # few or no detectable R-peaks in 10s
+
+# ECG physiological limits (for sanity checks)
+physiology:
+  hr_absolute_range: [30, 250]  # BPM
+  pr_range_ms: [120, 200]
+  qrs_max_ms: 120
+  qt_max_ms: 440               # corrected QT upper limit
+  amplitude_range_mv: [-5, 5]  # valid ADC range in mV-equivalent

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <executable name="dist/default/debug/SAME54_XPRO_Pan_Tompkins_QRS_V3.2.X.debug.elf">
+    <memory name="program">
+      <units>bytes</units>
+      <length>1048576</length>
+      <used>5788</used>
+      <free>1042788</free>
+    </memory>
+    <memory name="data">
+      <units>bytes</units>
+      <length>262144</length>
+      <used>103253</used>
+      <free>158891</free>
+    </memory>
+  </executable>
+</project>

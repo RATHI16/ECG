@@ -62,7 +62,7 @@ python plot_waveforms.py        # Visual waveform comparison
 - `ECGSynth_v2_Validation_Report.pdf` — 12-page report
 - `waveforms_all_classes.png` — Visual comparison plot
 
-## AFib Criteria (Marten's Requirements)
+## AFib Criteria 
 
 All 4 must be satisfied simultaneously:
 
@@ -115,4 +115,4 @@ Recommended features for classification:
 ## Author
 
 Rathi — Microchip Technology  
-Algorithm: Marten (M19216)
+
